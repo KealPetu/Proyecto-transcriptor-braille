@@ -1,5 +1,5 @@
 from typing import List, Union
-from app.core.braille_logic import BRAILLE_MAP, REVERSE_BRAILLE_MAP
+from ..core.braille_logic import BRAILLE_MAP, REVERSE_BRAILLE_MAP
 
 # Definición de prefijos especiales según el documento
 PREFIJO_NUMERO = [3, 4, 5, 6]  # [cite: 111]
