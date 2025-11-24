@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: braille_backend
+    # Mapeamos el puerto 8000 del contenedor al 8000 de tu máquina
+    ports:
+      - "8000:8000"
+    # Volumen: Mapeamos tu carpeta local al contenedor.
+    # ¡Esto permite que si cambias código, el servidor se actualice solo (Hot Reload)!
+    volumes:
+      - ./backend:/app
+    # Comando específico para desarrollo con --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - braille_network
+
+  # Aquí irá el frontend en el siguiente paso
+  # frontend:
+  #   ...
+
+networks:
+  braille_network:
+    driver: bridge
