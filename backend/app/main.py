@@ -6,7 +6,7 @@ from app.api.routes import translation, generation
 app = FastAPI(
     title="Braille Translator API",
     description="API para la traducción bidireccional Español <-> Braille con generación de imágenes y PDFs",
-    version="1.1.0"
+    version="1.0.0"
 )
 
 # Configuración de CORS
