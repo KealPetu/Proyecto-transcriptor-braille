@@ -7,7 +7,7 @@ Autor: Isaac
 import pytest
 from io import BytesIO
 from PIL import Image
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from app.api.services.generator import (
     BrailleImageGenerator,
