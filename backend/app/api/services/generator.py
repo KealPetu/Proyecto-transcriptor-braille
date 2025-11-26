@@ -189,26 +189,40 @@ class BraillePDFGenerator:
         c.setFont("Helvetica-Bold", 16)
         c.drawCentredString(width / 2, height - 130, text)
         
-        # Convertir a Braille
-        braille_cells = text_to_braille(text)
-        
         # Dibujar representación Braille
         c.setFont("Helvetica", 18)
         c.drawCentredString(width / 2, height - 180, "Representación Braille:")
         
+        # Convertir a Braille
+        braille_cells = text_to_braille(text)
+
         # Dibujar celdas Braille
         start_x = 100
-        start_y = height - 250
+        current_x = start_x
+        current_y = height - 250
         cell_spacing = 15 * mm
+        line_height = 30 * mm
+        right_margin_limit = width - 100
         
-        for i, cell in enumerate(braille_cells):
-            x = start_x + (i * cell_spacing)
-            if x > width - 100:  # Nueva línea si se sale de la página
-                start_y -= 30 * mm
-                x = start_x
+        for cell in braille_cells:
             
-            self._draw_braille_cell_pdf(c, cell, x, start_y)
-        
+            # Verificamos si la celda ACTUAL cabe, si no, salto de línea ANTES de dibujar
+            if current_x + cell_spacing > right_margin_limit:
+                current_x = start_x      # Reset a la izquierda
+                current_y -= line_height # Bajar una línea
+                
+                # Opcional: Si current_y es muy bajo, crear nueva página (c.showPage())
+                if current_y < 50: 
+                    c.showPage()
+                    current_y = height - 100
+                    current_x = start_x
+
+            # Dibujar la celda en la posición actual
+            self._draw_braille_cell_pdf(c, cell, current_x, current_y)
+            
+            # Avanzar el cursor para la siguiente celda
+            current_x += cell_spacing
+
         # Información adicional
         c.setFont("Helvetica", 10)
         c.drawString(50, 50, f"Generado por: Transcriptor Braille")
