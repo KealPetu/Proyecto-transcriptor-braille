@@ -25,17 +25,17 @@ jobs:
         cache: 'pip' # Caché de dependencias para que sea más rápido
 
     - name: Instalar dependencias
+      # Instalar librerías de testing si no están en requirements
       run: |
         cd backend
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        # Instalar librerías de testing si no están en requirements
         pip install pytest httpx
 
     - name: Ejecutar Pruebas Unitarias
+      # Ejecuta pytest y muestra output detallado (-v)
       run: |
         cd backend
-        # Ejecuta pytest y muestra output detallado (-v)
         pytest -v
 
   # --- JOB 2: VERIFICACIÓN DEL FRONTEND (React) ---
@@ -55,9 +55,10 @@ jobs:
         cache-dependency-path: frontend/package-lock.json
 
     - name: Instalar dependencias
+      # 'ci' es más rápido y estricto que 'install' para entornos limpios
       run: |
         cd frontend
-        npm ci # 'ci' es más rápido y estricto que 'install' para entornos limpios
+        npm ci
 
     - name: Verificar Compilación (Build)
       # Esto asegura que no haya errores de sintaxis o TS que rompan la app
