@@ -1,0 +1,30 @@
+.braille-cell {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columnas */
+    grid-template-rows: repeat(3, 1fr);
+    /* 3 filas */
+    gap: 4px;
+    width: 30px;
+    height: 45px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    /* El borde del "cuadratín" */
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.braille-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    /* Gris claro (apagado) */
+    margin: auto;
+}
+
+.braille-dot.active {
+    background-color: #2196f3;
+    /* Azul (encendido) */
+    box-shadow: 0 0 2px #2196f3;
+}

@@ -1,0 +1,84 @@
+name: CI/CD Pipeline - Braille Translator
+
+# Configuración de disparadores (Triggers)
+# Se ejecuta en Pushes y Pull Requests hacia ramas principales
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  # --- JOB 1: VERIFICACIÓN DEL BACKEND (Python) ---
+  backend-test:
+    name: Backend Tests & Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: 'pip' # Caché de dependencias para que sea más rápido
+
+    - name: Instalar dependencias
+      # Instalar librerías de testing si no están en requirements
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest httpx
+
+    - name: Ejecutar Pruebas Unitarias
+      # Ejecuta pytest y muestra output detallado (-v)
+      run: |
+        cd backend
+        pytest -v
+
+  # --- JOB 2: VERIFICACIÓN DEL FRONTEND (React) ---
+  frontend-build:
+    name: Frontend Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Instalar dependencias
+      # 'ci' es más rápido y estricto que 'install' para entornos limpios
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Verificar Compilación (Build)
+      # Esto asegura que no haya errores de sintaxis o TS que rompan la app
+      run: |
+        cd frontend
+        npm run build
+      env:
+        # Evita que el build falle por warnings menores (opcional)
+        CI: false 
+
+  # --- JOB 3: INTEGRACIÓN CON DOCKER ---
+  docker-build:
+    name: Docker Compose Build
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-build] # Solo corre si los tests anteriores pasan
+    
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Construir Contenedores
+      # Verifica que el Dockerfile y docker-compose.yml sean válidos
+      run: docker compose build

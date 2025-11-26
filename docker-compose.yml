@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: braille_backend
+    # Mapeamos el puerto 8000 del contenedor al 8000 de tu máquina
+    ports:
+      - "8000:8000"
+    # Volumen: Mapeamos tu carpeta local al contenedor.
+    # ¡Esto permite que si cambias código, el servidor se actualice solo (Hot Reload)!
+    volumes:
+      - ./backend:/app
+    # Comando específico para desarrollo con --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - braille_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: braille_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      # Truco importante: volumen anónimo para node_modules
+      # Esto evita que el mapeo de arriba borre las librerías instaladas dentro del contenedor
+      - /app/node_modules
+    environment:
+      # React necesita saber dónde está el backend. 
+      # Como el código corre en el navegador del usuario, usamos localhost.
+      - REACT_APP_API_URL=http://localhost:8000
+      # Fuerza al watcher a verificar cambios (necesario en Docker para Windows/Mac)
+      - WATCHPACK_POLLING=true
+    stdin_open: true # Necesario para que no se cierre el proceso de React
+    tty: true
+    depends_on:
+      - backend # Espera a que el backend inicie
+    networks:
+      - braille_network
+
+networks:
+  braille_network:
+    driver: bridge

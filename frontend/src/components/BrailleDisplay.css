@@ -1,0 +1,60 @@
+.braille-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  /* Espacio para los botones de abajo */
+}
+
+.actions-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  /* Alinear botones a la derecha */
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.btn-download {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-download:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Estilo específico para Imagen (Verde azulado) */
+.btn-img {
+  background-color: #00897b;
+  color: white;
+}
+
+.btn-img:hover:not(:disabled) {
+  background-color: #00695c;
+  transform: translateY(-2px);
+}
+
+/* Estilo específico para PDF (Rojo) */
+.btn-pdf {
+  background-color: #e53935;
+  color: white;
+}
+
+.btn-pdf:hover:not(:disabled) {
+  background-color: #c62828;
+  transform: translateY(-2px);
+}
