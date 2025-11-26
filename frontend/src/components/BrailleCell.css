@@ -1,8 +1,8 @@
 .braille-cell {
     display: grid;
-    grid_template_columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     /* 2 columnas */
-    grid_template_rows: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     /* 3 filas */
     gap: 4px;
     width: 30px;
