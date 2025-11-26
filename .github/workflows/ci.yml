@@ -81,4 +81,4 @@ jobs:
 
     - name: Construir Contenedores
       # Verifica que el Dockerfile y docker-compose.yml sean válidos
-      run: docker-compose build
+      run: docker compose build
