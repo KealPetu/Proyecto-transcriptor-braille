@@ -26,4 +26,33 @@ export const brailleApi = {
 
     return response.json();
   },
+  
+  downloadImage: async (text: string): Promise<Blob> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/generation/image`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        include_text: true
+      }),
+    });
+
+    if (!response.ok) throw new Error('Error generando la imagen');
+    return response.blob(); // Importante: devolvemos un Blob
+  },
+
+  downloadPdf: async (text: string): Promise<Blob> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/generation/pdf`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text,
+        title: "Traducción Braille"
+      }),
+    });
+
+    if (!response.ok) throw new Error('Error generando el PDF');
+    return response.blob(); // Importante: devolvemos un Blob
+  }
 };
+
