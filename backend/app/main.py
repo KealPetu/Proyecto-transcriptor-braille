@@ -1,11 +1,11 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import translation
+from app.api.routes import translation, generation
 
 app = FastAPI(
     title="Braille Translator API",
-    description="API para la traducción bidireccional Español <-> Braille",
+    description="API para la traducción bidireccional Español <-> Braille con generación de imágenes y PDFs",
     version="1.0.0"
 )
 
@@ -27,10 +27,18 @@ app.add_middleware(
 
 # Incluir rutas
 app.include_router(translation.router, prefix="/api/v1/translation", tags=["Translation"])
+app.include_router(generation.router, prefix="/api/v1/generation", tags=["Generation"])
 
 @app.get("/")
 def read_root():
-    return {"message": "API de Traducción Braille v1.0. Estado: Activo"}
+    return {
+        "message": "API de Traducción Braille v1.1. Estado: Activo",
+        "features": [
+            "Traducción Español <-> Braille",
+            "Generación de imágenes PNG",
+            "Generación de PDFs para señaléticas"
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn
