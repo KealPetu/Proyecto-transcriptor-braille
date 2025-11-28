@@ -89,14 +89,22 @@ def generar_mapa_completo():
     # --- Signos de Puntuación ---
     # Traducción de signos de puntuación españoles al Braille
     signos_puntuacion = {
-        '.': [3],       # Punto
+        '.': [3],             # Punto
         ',': [2],             # Coma
         ':': [2, 5],          # Dos puntos
+        ';': [2, 3],          # Punto y coma
+        '"': [2, 3, 6],       # Comillas
         '?': [2, 6],          # Interrogación (cierre)
         '¿': [2, 6],          # Interrogación (apertura)
         '!': [2, 3, 5],       # Exclamación (cierre)
         '¡': [2, 3, 5],       # Exclamación (apertura)
         '-': [3, 6],          # Guion/Raya
+        '(': [1, 2, 6],       # Abre Paréntesis
+        ')': [3, 4, 5],       # Cierra Paréntesis
+        '+': [2, 3, 5],       # Suma
+        '*': [2, 3, 6],       # Multiplicacion
+        '/': [2, 5, 6],       # Division
+        '=': [2, 3, 5, 6]     # Igual
     }
     braille_map.update(signos_puntuacion)
 
