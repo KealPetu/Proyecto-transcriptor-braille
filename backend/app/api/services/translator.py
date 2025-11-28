@@ -38,7 +38,7 @@ def text_to_braille(text: str) -> List[List[int]]:
         
         else:
             # Si encontramos un carácter que no es dígito ni espacio ni puntuación, salimos del modo numérico
-            if char not in [' ', '.', ',', ':', '?', '!', '-', '¿', '¡']:
+            if char not in ['.', ',', ':', '?', '!', '-', '¿', '¡']:
                 is_number_mode = False
 
         # --- Lógica de Texto General ---
