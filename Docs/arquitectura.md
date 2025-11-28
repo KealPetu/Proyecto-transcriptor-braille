@@ -10,7 +10,7 @@ La arquitectura sigue el patrón de **Microservicios (simulado)** mediante conte
 
 ```mermaid
 graph TD
-    User["Usuario Final"] -->|Interactúa vía Browser| Frontend["Contenedor Frontend (React + Vite)"]
+    User["Usuario Final"] -->|Interactúa vía Browser| Frontend["Contenedor Frontend (React)"]
     Frontend -->|"HTTP Requests (JSON/Blob)"| Backend["Contenedor Backend (FastAPI)"]
     
     subgraph "Backend Core"
