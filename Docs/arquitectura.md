@@ -8,7 +8,6 @@ La arquitectura sigue el patrón de **Microservicios (simulado)** mediante conte
 
 ## 2\. Diagrama de Arquitectura (Alto Nivel)
 
-```mermaid
 graph TD
     User[Usuario Final] -->|Interactúa vía Browser| Frontend[Contenedor Frontend (React)]
     Frontend -->|HTTP Requests (JSON/Blob)| Backend[Contenedor Backend (FastAPI)]
@@ -26,7 +25,6 @@ graph TD
         Docker --> Backend
         GitHub[GitHub Actions] -->|CI/CD| Tests[Pytest & Build Checks]
     end
-```
 
 ## 3\. Componentes del Sistema
 
