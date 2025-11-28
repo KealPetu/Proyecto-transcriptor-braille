@@ -9,6 +9,35 @@
   /* Espacio para los botones de abajo */
 }
 
+.braille-display-container {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.display-section {
+  margin-bottom: 2rem;
+}
+
+.display-section h3 {
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  margin-bottom: 1rem;
+}
+
+.text-box {
+  padding: 1.2rem;
+  background: #f5f5f5;
+  border-radius: 6px;
+  border-left: 4px solid #2196f3;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #2c3e50;
+  word-wrap: break-word;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
 .actions-bar {
   display: flex;
   gap: 1rem;

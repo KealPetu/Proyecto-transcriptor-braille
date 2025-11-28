@@ -27,7 +27,15 @@ function App() {
 
   return (
     <div className="App" style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>Traductor Español - Braille</h1>
+      <h1 style={{ 
+        textAlign: 'center', 
+        color: '#ffffff',
+        fontSize: '2.5rem',
+        fontWeight: '700',
+        letterSpacing: '-0.5px',
+        marginBottom: '1.5rem',
+        fontFamily: '"Segoe UI", "Roboto", sans-serif'
+      }}>Traductor Español - Braille</h1>
 
       <TextInput onTranslate={handleTranslate} isLoading={isLoading} />
 
