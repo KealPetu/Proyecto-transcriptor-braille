@@ -10,21 +10,21 @@ La arquitectura sigue el patrón de **Microservicios (simulado)** mediante conte
 
 ```mermaid
 graph TD
-    User[Usuario Final] -->|Interactúa vía Browser| Frontend[Contenedor Frontend (React)]
-    Frontend -->|HTTP Requests (JSON/Blob)| Backend[Contenedor Backend (FastAPI)]
+    User["Usuario Final"] -->|Interactúa vía Browser| Frontend["Contenedor Frontend (React + Vite)"]
+    Frontend -->|"HTTP Requests (JSON/Blob)"| Backend["Contenedor Backend (FastAPI)"]
     
     subgraph "Backend Core"
-        Backend --> Router[API Router]
-        Router --> ServiceT[Servicio Traducción]
-        Router --> ServiceG[Servicio Generación]
-        ServiceT --> Logic[Lógica Braille (Reglas de Negocio)]
-        ServiceG --> Libs[ReportLab / Pillow]
+        Backend --> Router["API Router"]
+        Router --> ServiceT["Servicio Traducción"]
+        Router --> ServiceG["Servicio Generación"]
+        ServiceT --> Logic["Lógica Braille (Reglas de Negocio)"]
+        ServiceG --> Libs["ReportLab / Pillow"]
     end
     
     subgraph "Infraestructura & DevOps"
-        Docker[Docker Compose] --> Frontend
+        Docker["Docker Compose"] --> Frontend
         Docker --> Backend
-        GitHub[GitHub Actions] -->|CI/CD| Tests[Pytest & Build Checks]
+        GitHub["GitHub Actions"] -->|"CI/CD"| Tests["Pytest & Build Checks"]
     end
 ```
 ## 3\. Componentes del Sistema
