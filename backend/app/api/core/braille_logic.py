@@ -86,6 +86,20 @@ def generar_mapa_completo():
                                       # En el gráfico [cite: 130] el prefijo mayúscula son puntos 4-6.
     braille_map[' '] = []             # Espacio vacío
 
+    # --- Signos de Puntuación ---
+    # Traducción de signos de puntuación españoles al Braille
+    signos_puntuacion = {
+        '.': [2, 5, 6],       # Punto
+        ',': [2],             # Coma
+        ':': [2, 5],          # Dos puntos
+        '?': [2, 6],          # Interrogación (cierre)
+        '¿': [2, 6],          # Interrogación (apertura)
+        '!': [2, 3, 5],       # Exclamación (cierre)
+        '¡': [2, 3, 5],       # Exclamación (apertura)
+        '-': [3, 6],          # Guion/Raya
+    }
+    braille_map.update(signos_puntuacion)
+
     return braille_map
 
 # Constante global para usar en el resto de la app
