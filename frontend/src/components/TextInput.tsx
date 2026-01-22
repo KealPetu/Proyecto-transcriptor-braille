@@ -2,11 +2,18 @@ import React, { useState } from 'react';
 import './TextInput.css';
 
 interface TextInputProps {
-  onTranslate: (text: string) => void;
+  onTranslate: (text: string) => Promise<void>;
   isLoading: boolean;
+  onDownloadImage: () => Promise<void>;
+  onDownloadPdf: () => Promise<void>;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ onTranslate, isLoading }) => {
+const TextInput: React.FC<TextInputProps> = ({
+  onTranslate,
+  isLoading,
+  onDownloadImage,
+  onDownloadPdf
+}) => {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,6 +61,24 @@ const TextInput: React.FC<TextInputProps> = ({ onTranslate, isLoading }) => {
             className="btn-secondary"
           >
             Limpiar
+          </button>
+          <button
+            type="button"
+            onClick={onDownloadImage}
+            disabled={isLoading}
+            className="btn-secondary"
+            title="Descargar como imagen PNG"
+          >
+            📥 Imagen
+          </button>
+          <button
+            type="button"
+            onClick={onDownloadPdf}
+            disabled={isLoading}
+            className="btn-secondary"
+            title="Descargar como PDF"
+          >
+            📄 PDF
           </button>
         </div>
       </form>
