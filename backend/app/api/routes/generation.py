@@ -12,7 +12,7 @@ Características:
     - Manejo profesional de errores
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -31,6 +31,7 @@ class GenerationRequest(BaseModel):
     
     text: str = Field(..., min_length=1, max_length=500, description="Texto a convertir a Braille")
     include_text: bool = Field(default=True, description="Incluir texto original en la imagen")
+    mirror: bool = Field(default=False, description="Generar imagen en modo espejo")
 
 
 class PDFGenerationRequest(BaseModel):
@@ -38,6 +39,7 @@ class PDFGenerationRequest(BaseModel):
     
     text: str = Field(..., min_length=1, max_length=500, description="Texto a convertir a Braille")
     title: str = Field(default="Señalética Braille", description="Título del documento PDF")
+    mirror: bool = Field(default=False, description="Generar PDF en modo espejo")
 
 
 @router.post("/image")
@@ -285,7 +287,7 @@ async def generate_image(request: GenerationRequest):
     
     try:
         # Generar imagen
-        image_buffer = generate_braille_image(request.text, request.include_text)
+        image_buffer = generate_braille_image(request.text, request.mirror, request.include_text)
         
         # Retornar como respuesta de streaming
         return StreamingResponse(
@@ -445,7 +447,7 @@ async def generate_pdf(request: PDFGenerationRequest):
     
     try:
         # Generar PDF
-        pdf_buffer = generate_braille_pdf(request.text, request.title)
+        pdf_buffer = generate_braille_pdf(request.text, request.mirror, request.title)
         
         # Retornar como respuesta de streaming
         return StreamingResponse(

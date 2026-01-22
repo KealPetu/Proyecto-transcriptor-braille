@@ -94,10 +94,11 @@ export const brailleApi = {
    * Descarga imagen PNG con Braille.
    * 
    * @param text - Texto a convertir
+   * @param mirror - Generar imagen en modo espejo
    * @param includeText - Incluir texto original en imagen
    * @returns Blob con imagen PNG
    */
-  downloadImage: async (text: string, includeText: boolean = true): Promise<Blob> => {
+  downloadImage: async (text: string, mirror: boolean = false, includeText: boolean = true): Promise<Blob> => {
     if (!text || !text.trim()) {
       throw new Error('El texto no puede estar vacío');
     }
@@ -107,6 +108,7 @@ export const brailleApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         text: text.trim(),
+        mirror: mirror,
         include_text: includeText
       }),
     });
@@ -122,10 +124,11 @@ export const brailleApi = {
    * Descarga documento PDF con Braille.
    * 
    * @param text - Texto a convertir
+   * @param mirror - Generar PDF en modo espejo
    * @param title - Título del PDF
    * @returns Blob con documento PDF
    */
-  downloadPdf: async (text: string, title: string = "Traducción Braille"): Promise<Blob> => {
+  downloadPdf: async (text: string, mirror: boolean = false, title: string = "Traducción Braille"): Promise<Blob> => {
     if (!text || !text.trim()) {
       throw new Error('El texto no puede estar vacío');
     }
@@ -135,6 +138,7 @@ export const brailleApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         text: text.trim(),
+        mirror: mirror,
         title: title || "Traducción Braille"
       }),
     });

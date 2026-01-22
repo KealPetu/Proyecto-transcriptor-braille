@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import TextInput from './components/TextInput';
+import BrailleInput from './components/BrailleInput';
 import BrailleDisplay from './components/BrailleDisplay';
+import BrailleMirror from './components/BrailleMirror';
+import ReverseTranslationDisplay from './components/ReverseTranslationDisplay';
 import { brailleApi } from './services/api';
-import type { TranslationResponse } from './types';
+import type { TranslationResponse, ReverseTranslationResponse } from './types';
 import './App.css';
 
 /**
@@ -20,6 +23,12 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isApiHealthy, setIsApiHealthy] = useState(false);
+  
+  // Estado para traducción inversa
+  const [brailleCode, setBrailleCode] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
+  const [reverseError, setReverseError] = useState('');
+  const [isReverseLoading, setIsReverseLoading] = useState(false);
 
   // Verificar salud de API al montar el componente
   useEffect(() => {
@@ -55,6 +64,31 @@ function App() {
     }
   };
 
+  /**
+   * Maneja la traducción inversa de Braille a texto.
+   */
+  const handleReverseTranslate = async (brailleCellsInput: number[][]) => {
+    setIsReverseLoading(true);
+    setReverseError('');
+    
+    try {
+      const result: ReverseTranslationResponse = await brailleApi.reverseTranslate(brailleCellsInput);
+      setTranslatedText(result.translated_text);
+      
+      // Guardar el código Braille para mostrar en la respuesta
+      const codeStr = brailleCellsInput
+        .map(cell => cell.sort((a, b) => a - b).join(''))
+        .join(' ');
+      setBrailleCode(codeStr);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      setReverseError(errorMessage);
+      console.error('Error en traducción inversa:', err);
+    } finally {
+      setIsReverseLoading(false);
+    }
+  };
+
   return (
     <div className="App" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
       {/* Header */}
@@ -76,33 +110,103 @@ function App() {
         </p>
       </header>
 
-      {/* Input de texto */}
-      <TextInput
-        onTranslate={handleTranslate}
-        isLoading={isLoading}
-      />
+      {/* Sección de traducción normal: Español → Braille */}
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          color: '#667eea',
+          marginBottom: '1.5rem',
+          textAlign: 'center',
+          letterSpacing: '-0.3px'
+        }}>
+          ✍️ Traducción Español → Braille
+        </h2>
 
-      {/* Mensaje de error */}
-      {error && (
-        <div
-          style={{
-            backgroundColor: '#ffebee',
-            color: '#c62828',
-            padding: '1rem',
-            borderRadius: '4px',
-            marginBottom: '1rem',
-            borderLeft: '4px solid #c62828'
-          }}
-        >
-          <strong>Error:</strong> {error}
-        </div>
-      )}
+        {/* Input de texto */}
+        <TextInput
+          onTranslate={handleTranslate}
+          isLoading={isLoading}
+        />
 
-      {/* Resultado de traducción */}
-      <BrailleDisplay
-        originalText={originalText}
-        brailleCells={brailleCells}
-      />
+        {/* Mensaje de error */}
+        {error && (
+          <div
+            style={{
+              backgroundColor: '#ffebee',
+              color: '#c62828',
+              padding: '1rem',
+              borderRadius: '4px',
+              marginBottom: '1rem',
+              borderLeft: '4px solid #c62828'
+            }}
+          >
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {/* Resultado de traducción */}
+        <BrailleDisplay
+          originalText={originalText}
+          brailleCells={brailleCells}
+        />
+
+        {/* Vista de espejo */}
+        <BrailleMirror
+          originalText={originalText}
+          brailleCells={brailleCells}
+        />
+      </section>
+
+      {/* Divisor */}
+      <div style={{
+        height: '2px',
+        background: 'linear-gradient(90deg, transparent, #667eea, transparent)',
+        margin: '2rem 0',
+        borderRadius: '1px'
+      }} />
+
+      {/* Sección de traducción inversa: Braille → Español */}
+      <section>
+        <h2 style={{
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          color: '#764ba2',
+          marginBottom: '1.5rem',
+          textAlign: 'center',
+          letterSpacing: '-0.3px'
+        }}>
+          🔄 Traducción Braille → Español
+        </h2>
+
+        {/* Input de código Braille */}
+        <BrailleInput
+          onTranslate={handleReverseTranslate}
+          isLoading={isReverseLoading}
+        />
+
+        {/* Mensaje de error traducción inversa */}
+        {reverseError && (
+          <div
+            style={{
+              backgroundColor: '#ffebee',
+              color: '#c62828',
+              padding: '1rem',
+              borderRadius: '4px',
+              marginBottom: '1rem',
+              borderLeft: '4px solid #c62828'
+            }}
+          >
+            <strong>Error:</strong> {reverseError}
+          </div>
+        )}
+
+        {/* Resultado de traducción inversa */}
+        <ReverseTranslationDisplay
+          brailleCode={brailleCode}
+          translatedText={translatedText}
+        />
+      </section>
     </div>
   );
 }

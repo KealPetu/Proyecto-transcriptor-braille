@@ -205,7 +205,7 @@ class BrailleImageGenerator:
                     outline='gray'
                 )
     
-    def generate_image(self, text: str, include_text: bool = True) -> BytesIO:
+    def generate_image(self, text: str, include_text: bool = True, mirror: bool = False) -> BytesIO:
         """
         Genera una imagen PNG con representación visual de texto en Braille.
         
@@ -226,6 +226,8 @@ class BrailleImageGenerator:
                        Puede contener: letras, números, acentos, signos.
             include_text (bool): Si True, incluir el texto original como
                                encabezado de la imagen (Default: True)
+            mirror (bool): Si True, generar imagen en modo espejo
+                         (invertida horizontalmente) (Default: False)
         
         Returns:
             BytesIO: Buffer de imagen PNG en memoria, posicionado al inicio
@@ -245,9 +247,9 @@ class BrailleImageGenerator:
         
         Example:
             >>> gen = BrailleImageGenerator()
-            >>> buffer = gen.generate_image("Hola")
+            >>> buffer = gen.generate_image("Hola", mirror=True)
             >>> # Guardar como archivo
-            >>> with open("hola.png", "wb") as f:
+            >>> with open("hola_espejo.png", "wb") as f:
             ...     f.write(buffer.getvalue())
             >>> # O reutilizar buffer
             >>> buffer.seek(0)
@@ -257,10 +259,19 @@ class BrailleImageGenerator:
             - Imagen siempre tiene fondo blanco
             - Texto original en negro (si include_text=True)
             - Celdas Braille en negro/gris
+            - Modo espejo invierte horizontalmente toda la imagen
             - Ideal para impresión o visualización web
         """
         # Convertir texto a celdas Braille
         braille_cells = text_to_braille(text)
+        
+        # Si modo espejo, invertir cada celda
+        if mirror:
+            mirror_map = {1: 4, 2: 5, 3: 6, 4: 1, 5: 2, 6: 3}
+            braille_cells = [
+                sorted([mirror_map[dot] for dot in cell])
+                for cell in braille_cells
+            ]
         
         # Calcular dimensiones de la imagen
         num_cells = len(braille_cells)
@@ -291,6 +302,10 @@ class BrailleImageGenerator:
         for i, cell in enumerate(braille_cells):
             x_offset = self.margin + i * (self.cell_width + self.spacing)
             self._draw_braille_cell(draw, cell, x_offset, y_offset)
+        
+        # Si modo espejo, invertir la imagen
+        if mirror:
+            img = img.transpose(Image.FLIP_LEFT_RIGHT)
         
         # Guardar en BytesIO
         buffer = BytesIO()
@@ -356,7 +371,7 @@ class BraillePDFGenerator:
         """
         self.page_size = page_size
     
-    def generate_pdf(self, text: str, title: str = "Señalética Braille") -> BytesIO:
+    def generate_pdf(self, text: str, title: str = "Señalética Braille", mirror: bool = False) -> BytesIO:
         """
         Genera un documento PDF con texto original y representación Braille.
         
@@ -380,6 +395,8 @@ class BraillePDFGenerator:
                        Se convierte internamente a celdas Braille.
             title (str): Título del documento (Default: "Señalética Braille")
                         Aparece centrado en la parte superior.
+            mirror (bool): Si True, generar PDF en modo espejo
+                         (celdas invertidas horizontalmente) (Default: False)
         
         Returns:
             BytesIO: Buffer PDF en memoria, posicionado al inicio (seek(0)).
@@ -400,9 +417,9 @@ class BraillePDFGenerator:
         
         Example:
             >>> gen = BraillePDFGenerator()
-            >>> buffer = gen.generate_pdf("Salida", title="Salida de Emergencia")
+            >>> buffer = gen.generate_pdf("Salida", title="Salida de Emergencia", mirror=True)
             >>> # Guardar como archivo
-            >>> with open("salida.pdf", "wb") as f:
+            >>> with open("salida_espejo.pdf", "wb") as f:
             ...     f.write(buffer.getvalue())
             >>> # O enviar en respuesta HTTP
             >>> # return StreamingResponse(buffer, media_type="application/pdf")
@@ -412,6 +429,7 @@ class BraillePDFGenerator:
             - A4 es 210×297 mm (595×842 puntos)
             - Márgenes: 50 puntos (aproximadamente 18mm)
             - Fuentes: Helvetica (estándar, siempre disponible)
+            - Modo espejo: Invierte las celdas Braille horizontalmente
         """
         buffer = BytesIO()
         c = canvas.Canvas(buffer, pagesize=self.page_size)
@@ -433,6 +451,16 @@ class BraillePDFGenerator:
         
         # Convertir a Braille
         braille_cells = text_to_braille(text)
+        
+        # Si modo espejo, invertir cada celda
+        if mirror:
+            mirror_map = {1: 4, 2: 5, 3: 6, 4: 1, 5: 2, 6: 3}
+            braille_cells = [
+                sorted([mirror_map[dot] for dot in cell])
+                for cell in braille_cells
+            ]
+            # También invertir el orden de las celdas
+            braille_cells = braille_cells[::-1]
 
         # Dibujar celdas Braille
         start_x = 100
@@ -545,7 +573,7 @@ class BraillePDFGenerator:
 
 
 # Funciones de conveniencia
-def generate_braille_image(text: str, include_text: bool = True) -> BytesIO:
+def generate_braille_image(text: str, mirror: bool = False, include_text: bool = True) -> BytesIO:
     """
     Función de conveniencia para generar imagen PNG con Braille.
     
@@ -557,6 +585,7 @@ def generate_braille_image(text: str, include_text: bool = True) -> BytesIO:
     
     Args:
         text (str): Texto en español a convertir a Braille.
+        mirror (bool): Si generar en modo espejo (Default: False)
         include_text (bool): Si incluir el texto original en la imagen.
                             Default: True
     
@@ -570,7 +599,7 @@ def generate_braille_image(text: str, include_text: bool = True) -> BytesIO:
         Cualquier excepción de BrailleImageGenerator.generate_image()
     
     Example:
-        >>> buffer = generate_braille_image("Hola")
+        >>> buffer = generate_braille_image("Hola", mirror=True)
         >>> with open("salida.png", "wb") as f:
         ...     f.write(buffer.getvalue())
     
@@ -579,10 +608,10 @@ def generate_braille_image(text: str, include_text: bool = True) -> BytesIO:
         - Para personalizar, usar BrailleImageGenerator directamente
     """
     generator = BrailleImageGenerator()
-    return generator.generate_image(text, include_text)
+    return generator.generate_image(text, include_text, mirror)
 
 
-def generate_braille_pdf(text: str, title: str = "Señalética Braille") -> BytesIO:
+def generate_braille_pdf(text: str, mirror: bool = False, title: str = "Señalética Braille") -> BytesIO:
     """
     Función de conveniencia para generar PDF con Braille.
     
@@ -594,6 +623,7 @@ def generate_braille_pdf(text: str, title: str = "Señalética Braille") -> Byte
     
     Args:
         text (str): Texto en español a convertir a Braille.
+        mirror (bool): Si generar en modo espejo (Default: False)
         title (str): Título del documento PDF.
                     Default: "Señalética Braille"
     
@@ -607,7 +637,7 @@ def generate_braille_pdf(text: str, title: str = "Señalética Braille") -> Byte
         Cualquier excepción de BraillePDFGenerator.generate_pdf()
     
     Example:
-        >>> buffer = generate_braille_pdf("Salida", title="Salida de Emergencia")
+        >>> buffer = generate_braille_pdf("Salida", mirror=True, title="Salida de Emergencia")
         >>> with open("salida.pdf", "wb") as f:
         ...     f.write(buffer.getvalue())
     
@@ -617,4 +647,4 @@ def generate_braille_pdf(text: str, title: str = "Señalética Braille") -> Byte
         - Ideal para impresión de señaléticas
     """
     generator = BraillePDFGenerator()
-    return generator.generate_pdf(text, title)
+    return generator.generate_pdf(text, title, mirror)
