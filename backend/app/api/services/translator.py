@@ -110,15 +110,6 @@ def text_to_braille(text: str) -> List[List[int]]:
             i += 1
             continue
         
-<<<<<<< HEAD
-        else:
-            # Si encontramos un carácter que no es dígito ni espacio ni puntuación, salimos del modo numérico
-            if char not in ['.', ',', ':', '?', '!', '-', '¿', '¡']:
-                is_number_mode = False
-
-        # --- Lógica de Texto General ---
-        char_lower = char.lower()
-=======
         # Manejar separadores de números (puntos y comas)
         if char in ',.':
             if is_number_mode:
@@ -129,7 +120,6 @@ def text_to_braille(text: str) -> List[List[int]]:
                     result.append(BRAILLE_MAP[','])
                 i += 1
                 continue
->>>>>>> develop
         
         # Salir del modo numérico con espacio u otros caracteres
         if is_number_mode and char not in '0123456789,.':

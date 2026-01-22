@@ -55,68 +55,6 @@ function App() {
     }
   };
 
-  /**
-   * Maneja la descarga de imagen PNG.
-   */
-  const handleDownloadImage = async () => {
-    if (!originalText) {
-      setError('Primero traduce un texto');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const blob = await brailleApi.downloadImage(originalText, true);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `braille_${originalText.substring(0, 10).replace(/\s+/g, '_')}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al descargar imagen';
-      setError(errorMessage);
-      console.error('Error descargando imagen:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /**
-   * Maneja la descarga de documento PDF.
-   */
-  const handleDownloadPdf = async () => {
-    if (!originalText) {
-      setError('Primero traduce un texto');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const blob = await brailleApi.downloadPdf(originalText, `Braille: ${originalText}`);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `braille_${originalText.substring(0, 10).replace(/\s+/g, '_')}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al descargar PDF';
-      setError(errorMessage);
-      console.error('Error descargando PDF:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="App" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
       {/* Header */}
@@ -136,31 +74,12 @@ function App() {
         <p style={{ color: '#b0b0b0', marginTop: '0.5rem' }}>
           Traducción profesional con generación de materiales visuales
         </p>
-        
-        {/* Estado de API */}
-        <div style={{ marginTop: '1rem' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              backgroundColor: isApiHealthy ? '#4CAF50' : '#f44336',
-              color: 'white'
-            }}
-          >
-            {isApiHealthy ? '✓ API Conectada' : '✗ API No disponible'}
-          </span>
-        </div>
       </header>
 
       {/* Input de texto */}
       <TextInput
         onTranslate={handleTranslate}
         isLoading={isLoading}
-        onDownloadImage={handleDownloadImage}
-        onDownloadPdf={handleDownloadPdf}
       />
 
       {/* Mensaje de error */}

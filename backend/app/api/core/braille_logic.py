@@ -103,36 +103,6 @@ def generar_mapa_completo():
         'ú': [1, 2, 4, 5, 6],  # Ú acentuada (mismo que ñ, prioridad para ñ)
         'ü': [1, 2, 5, 6],     # Ü diéresis
     }
-<<<<<<< HEAD
-    braille_map.update(adicionales)
-
-    # --- Signos Especiales ---
-    # Números, Mayúsculas [cite: 142]
-    braille_map['num'] = [3, 4, 5, 6] # Prefijo de número
-    braille_map['cap'] = [4, 6]       # Prefijo de mayúscula (común) o según [cite: 142] puntos 4 y 6? 
-                                      # En el gráfico [cite: 130] el prefijo mayúscula son puntos 4-6.
-    braille_map[' '] = []             # Espacio vacío
-
-    # --- Signos de Puntuación ---
-    # Traducción de signos de puntuación españoles al Braille
-    signos_puntuacion = {
-        '.': [3],             # Punto
-        ',': [2],             # Coma
-        ':': [2, 5],          # Dos puntos
-        ';': [2, 3],          # Punto y coma
-        '"': [2, 3, 6],       # Comillas
-        '?': [2, 6],          # Interrogación (cierre)
-        '¿': [2, 6],          # Interrogación (apertura)
-        '!': [2, 3, 5],       # Exclamación (cierre)
-        '¡': [2, 3, 5],       # Exclamación (apertura)
-        '-': [3, 6],          # Guion/Raya
-        '(': [1, 2, 6],       # Abre Paréntesis
-        ')': [3, 4, 5],       # Cierra Paréntesis
-        '+': [2, 3, 5],       # Suma
-        '*': [2, 3, 6],       # Multiplicacion
-        '/': [2, 5, 6],       # Division
-        '=': [2, 3, 5, 6]     # Igual
-=======
     braille_map.update(especiales)
     
     # --- Números (0-9) ---
@@ -156,7 +126,6 @@ def generar_mapa_completo():
         '/': [3, 4, 5],         # División
         '"': [2, 3, 5, 6],      # Comillas
         "'": [3],               # Apóstrofo
->>>>>>> develop
     }
     braille_map.update(signos)
     

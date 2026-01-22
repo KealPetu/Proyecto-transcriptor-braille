@@ -173,35 +173,6 @@ def translate_to_text(request: ReverseTranslationRequest):
     except Exception as e:
         logger.error(f"Error inesperado en traducción inversa: {str(e)}", exc_info=True)
         raise TranslationError(f"Error durante traducción inversa: {str(e)}")
-        ...     "braille_string_repr": "3456|1"
-        ... }
-    
-    Note:
-        - Prefijo número [3,4,5,6] precede a cada secuencia de dígitos
-        - Prefijo mayúscula [4,6] precede a cada letra mayúscula
-        - Los caracteres desconocidos se ignoran silenciosamente
-        - Ideal para aplicaciones educativas y accesibilidad
-    
-    Casos de Uso:
-        - Visualización de Braille en interfaces web
-        - Generación de material imprimible
-        - Integración con lectores Braille
-        - Material educativo sobre Braille
-    """
-    if not request.text:
-        raise HTTPException(status_code=400, detail="El texto no puede estar vacío")
-    
-    cells = text_to_braille(request.text)
-    
-    # Generamos una representación legible para facilitar el debug
-    # Ej: [[1], [1,2]] -> "1|12"
-    str_repr = "|".join(["".join(map(str, c)) if c else "_" for c in cells])
-    
-    return TranslationResponse(
-        original_text=request.text,
-        braille_cells=cells,
-        braille_string_repr=str_repr
-    )
 
 @router.post("/to-text", response_model=ReverseTranslationResponse)
 def translate_to_text(request: ReverseTranslationRequest):
