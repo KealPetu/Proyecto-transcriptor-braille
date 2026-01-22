@@ -56,14 +56,28 @@ const BrailleDisplay: React.FC<BrailleDisplayProps> = ({ originalText, brailleCe
   return (
     <div className="braille-display-container">
       <div className="display-section">
-        <h3>Texto Original:</h3>
+        <h3 style={{
+          fontSize: '1.3rem',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '0.8rem',
+          letterSpacing: '-0.3px',
+          fontFamily: '"Segoe UI", "Roboto", sans-serif'
+        }}>Texto Original:</h3>
         <div className="text-box original-text">
           {originalText || "Esperando texto..."}
         </div>
       </div>
 
       <div className="display-section">
-        <h3>Traducción Visual (Cuadratines):</h3>
+        <h3 style={{
+          fontSize: '1.3rem',
+          fontWeight: '600',
+          color: '#2c3e50',
+          marginBottom: '0.8rem',
+          letterSpacing: '-0.3px',
+          fontFamily: '"Segoe UI", "Roboto", sans-serif'
+        }}>Traducción Visual (Cuadratines):</h3>
         <div className="braille-grid-container">
           {brailleCells.length > 0 ? (
             brailleCells.map((cell, index) => (
