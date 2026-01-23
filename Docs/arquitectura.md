@@ -72,10 +72,22 @@ El entorno está completamente "containerizado" para garantizar consistencia ent
 
 ## 5\. Decisiones Técnicas y Justificación
 
-| Componente | Elección | Justificación |
-| :--- | :--- | :--- |
-| **Lenguaje Backend** | **Python** | Facilidad para manejo de strings y librerías robustas de generación de archivos (ReportLab). |
-| **Framework API** | **FastAPI** | Velocidad, tipado estático y generación automática de documentación (Swagger) requerida por el proyecto. |
-| **Frontend** | **React** | Arquitectura basada en componentes ideal para reutilizar la celda Braille (`BrailleCell`). |
-| **Estrategia Git** | **GitFlow** | Requerimiento explícito para organizar el desarrollo (`main`, `develop`, `feature/*`). |
-| **Despliegue** | **Docker** | Garantiza que el proyecto funcione en cualquier máquina sin configurar entornos locales complejos. |
+### 5.1. Lenguaje Backend: Python
+
+Se eligió Python como lenguaje de programación para el backend debido a su facilidad excepcional en el manejo de strings y su amplio ecosistema de librerías robustas para generación de archivos. En particular, ReportLab proporciona capacidades avanzadas para crear documentos PDF de calidad profesional, mientras que la sintaxis clara de Python permite implementar la lógica compleja de traducción Braille de manera mantenible y legible. Esta selección garantiza que las transformaciones de caracteres españoles a representaciones Braille se realicen de forma eficiente y con mínimo overhead de codificación.
+
+### 5.2. Framework API: FastAPI
+
+FastAPI fue seleccionado como framework para construir la API REST del backend. Esta decisión se fundamenta en tres pilares principales: velocidad de ejecución superior a otros frameworks Python, soporte integrado para tipado estático que mejora la confiabilidad del código, y generación automática de documentación interactiva (Swagger/OpenAPI) que es un requerimiento explícito del proyecto. FastAPI permite que los desarrolladores definan esquemas de validación una sola vez usando Pydantic, reutilizando automáticamente esa información para documentación, validación y serialización de datos. Esta característica reduce significativamente el tiempo de desarrollo y minimiza errores de desincronización entre código y documentación.
+
+### 5.3. Framework Frontend: React
+
+React fue elegido como framework para la capa de presentación del sistema. La arquitectura basada en componentes de React es particularmente adecuada para este proyecto porque permite la creación de un componente reutilizable `BrailleCell` que representa visualmente cada celda del sistema Braille de 6 puntos. Esta reutilización de componentes reduce la duplicación de código, facilita el mantenimiento consistente de la interfaz visual, y proporciona una base sólida para futuras expansiones de funcionalidad. TypeScript proporciona tipado estático que detecta errores en tiempo de desarrollo, mejorando la calidad del código frontend.
+
+### 5.4. Estrategia de Control de Versiones: GitFlow
+
+Se implementó GitFlow como estrategia de ramificación en Git. Esta decisión responde a un requerimiento explícito del proyecto y proporciona una estructura clara para la organización del desarrollo con ramas principales (`main` para producción, `develop` para desarrollo), ramas de características (`feature/*` para nuevas funcionalidades), ramas de liberación (`release/*` para preparar versiones), y ramas de correcciones (`hotfix/*` para parches urgentes). Esta estructura facilita la colaboración entre desarrolladores, permite integración continua organizada, y proporciona trazabilidad clara de cambios y versiones del proyecto.
+
+### 5.5. Estrategia de Despliegue: Docker
+
+Docker fue seleccionado como tecnología de containerización para garantizar que el proyecto funcione de manera consistente en cualquier máquina sin necesidad de configurar entornos locales complejos. Los contenedores aíslan completamente las dependencias del backend (Python, librerías específicas) y del frontend (Node.js, paquetes npm), eliminando problemas de compatibilidad entre máquinas de desarrollo, servidores de prueba y producción. Docker Compose orquesta los múltiples contenedores (backend, frontend, red interna) con una sola configuración, simplificando enormemente el proceso de inicialización del entorno de desarrollo y asegurando que todos los desarrolladores trabajen en entornos idénticos.
